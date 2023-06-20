@@ -1,33 +1,19 @@
-const express = require('express');
-// const router = require('./routes'); // Routing module
+const express = require("express");
+const cors = require("cors");
+const router = require('./routes'); // Routing module
+const mongoose = require("mongoose");
+
+// const messageRoutes = require("./routes/messages");
 const app = express();
-const port = process.env.PORT || 3200; // Port to run
-
-var cors = require('cors')
-
-    // Connect to database
-const mongoose = require('mongoose');
-//require('dotenv').config({ path: 'ENV_FILENAME' });
-require('dotenv').config();
-     
-
-let MONGODB_URI = "mongodb+srv://@cluster0.chhg7.mongodb.net/"
-let DB_NAME = "moviedb"
-let USERNM = "arpit1011"
-let PASS = "arpit1011"
-mongoose.connect(MONGODB_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useFindAndModify: false,
-        user: USERNM,
-        pass: PASS,
-        dbName: DB_NAME
-    })
-    .then(() => {
-        console.log('mongodb connected...')
-    })
-    .catch(err => console.log(err.message))
-
+require("dotenv").config();
+mongoose.connect('mongodb+srv://arpit1011:arpit1011@cluster0.chhg7.mongodb.net/moviedb?retryWrites=true&w=majority', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log('Connected to MongoDB Atlas');
+}).catch((error) => {
+  console.log('Error connecting to MongoDB Atlas:', error);
+});
 // Body parsing as JSON
 const bodyParser = require('body-parser');
 app.use(bodyParser.json({ limit: '5mb' }));
@@ -49,15 +35,9 @@ app.use('*', function(req, res, next) {
     );
     next();
 });
+app.use('/v1', router);
+const server = app.listen(process.env.PORT, () =>
+  console.log(`Server started on ${process.env.PORT}`)
+);
 
 
-
-app.use(express.static('uploads')); // Uploads directory
-
-// Routing module API v1
-
-app.get('/', async(req, res) => {
- 	return res.json({ "done": "working v6" });
-});
-
-app.listen(process.env.PORT || port, () => console.log('Server started ! Port -  ' + port));
