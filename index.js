@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 // const messageRoutes = require("./routes/messages");
 const app = express();
 require("dotenv").config();
-mongoose.connect('mongodb+srv://arpit1011:arpit1011@cluster0.chhg7.mongodb.net/moviedb?retryWrites=true&w=majority', {
+mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {
