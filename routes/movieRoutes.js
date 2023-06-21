@@ -2,15 +2,17 @@
 const app = require('express');
 const router = app.Router();
 const Types = require('../shared/Types') // Model types
-
+const {
+    movieDataValidateChainMethod
+  } = require("../validations/movie.validation");
 // CRUD Service
 const CRUD = require('../shared/CRUD')
 
 // Auth middleware
 // const CheckAuth = require('../shared/middleware/AuthMiddleware')
-
+ 
 // // Create
-router.post('/', (req, res) => CRUD.create(req.body, Types.MOVIE, res));
+router.post('/',movieDataValidateChainMethod,(req, res) => CRUD.create(req.body, Types.MOVIE, res));
 
 // // Update
 // router.put('/:id', CheckAuth, (req, res) => CRUD.updateById(req.params.id, req.body, Types.PAGE, res));

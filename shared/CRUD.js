@@ -3,6 +3,7 @@ const ResponseService = require('../shared/ResponseService'); // Response servic
 const Movie = require('../models/Movie'); // User model
 const Types = require('../shared/Types'); //  Types Model
 const jwt = require('jsonwebtoken');
+const { validationResult } = require("express-validator");
 // Return model by type
 
 
@@ -28,7 +29,17 @@ function createNewModelInstanceByName(type, val) {
 
 // Create
 exports.create = function (val, type, res) {
-    const model = createNewModelInstanceByName(type, val);
+    try {
+        const errors = validationResult(req);
+
+    // if there is error then return Error
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        errors: errors.array(),
+      });
+    }
+        const model = createNewModelInstanceByName(type, val);
     model.save().then(function (err, doc) {
         ResponseService.generalPayloadResponse(err, doc, res);
     })
@@ -39,6 +50,11 @@ exports.create = function (val, type, res) {
     // model.save((err, val) => {
     //     ResponseService.generalPayloadResponse(err, val, res);
     // });
+    }
+    catch (err) {
+        console.log('error to save',err);
+      }
+    
 } 
 
 
